@@ -355,3 +355,25 @@ insert into insert_trigger_details values
  ('user with id' + CAST(@id as varchar (52)) + 'with name' + @name + 'is deleted from the table')
 end
 select * from Del_trigger_details
+
+
+
+create trigger insert_instead_audit1 on employee
+after insert
+as
+begin
+declare @id int, @name varchar(60)
+
+select  @id = id , @name = fnmae from inserted
+
+insert into insert_trigger_details values
+ ('  User With Id' + CAST(@id as varchar(50)) + '  With Name' + @name + '  is Inserted in the table')
+end
+
+
+
+select * from employee
+
+select * from inserted
+
+select * from insert_trigger_details
