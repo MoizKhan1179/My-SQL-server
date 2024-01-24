@@ -268,3 +268,90 @@ select * from admin;
   select * from employees;
  
   select * from employees where dept=(select departmentID from departments where DepartmentName ='IT');
+
+--triggers--
+
+  --INSERT--
+  create trigger tr_emp1 on employee
+  for insert
+  as 
+  begin
+  print 'Someone is trying to breach'
+  end
+
+    create trigger tr_emp_insert1 on employee
+  after insert
+  as 
+  begin
+  select * from inserted
+  end
+
+
+
+  --inserting value into tr_emp
+
+
+  insert into employee(fnmae, lname, email, designation,gender, age, salary)
+  values
+		('Hammad','Ali','Hammad@gmail.com','IT manager','Male', 20, 500000)
+
+
+	--delete trigger
+	    create trigger tr_emp_del1 on employee
+  after delete
+  as 
+  begin
+  print 'user deleted'
+  end		
+
+  delete from employee where id= 122
+
+  select * from employee
+
+ --TRIGGERED UPDATE--
+
+ 	    create trigger tr_emp_update1 on employee
+  after update 
+  as 
+  begin
+	select * from inserted
+	select * from deleted
+  end
+
+   insert into employee(fnmae, lname, email, designation,gender, age, salary)
+  values
+		('Hammad','Ali','Hammad@gmail.com','IT manager','Male', 20, 500000)
+
+--UPDATE QUERY--
+
+slect * from inserted
+update employee set fnmae= 'Mosa' where id = 124
+
+
+
+create table insert_trigger_details(
+id int primary key identity,
+auditInfo varchar(255)
+);
+
+create trigger  insert_trigger_audit on employee 
+after insert 
+as
+begin 
+declare @id int, @name varchar(255)
+select @id = id, @name = fnmae from inserted 
+insert into insert_trigger_details values ('user with id' + CAST(@id as varchar (52)) + 'with name' + @name + 'is inserted in the table')
+end
+select * from insert_trigger_details
+
+
+create trigger  Del_trigger_audit on employee 
+after delete
+as
+begin 
+declare @id int, @name varchar(255)
+select @id = id, @name = fnmae from deleted
+insert into insert_trigger_details values
+ ('user with id' + CAST(@id as varchar (52)) + 'with name' + @name + 'is deleted from the table')
+end
+select * from Del_trigger_details
